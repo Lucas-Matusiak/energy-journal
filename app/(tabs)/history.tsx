@@ -1,23 +1,9 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEntries } from "../../context/EntriesContext";
 
 export default function HistoryScreen() {
-  const [entries, setEntries] = useState<any[]>([]);
-
-  useEffect(() => {
-    const loadEntries = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem("entries");
-        if (jsonValue != null) {
-          setEntries(JSON.parse(jsonValue));
-        }
-      } catch (e) {
-        console.error("Erreur chargement :", e);
-      }
-    };
-    loadEntries();
-  }, []);
+  const { entries } = useEntries();
 
   return (
     <View style={styles.container}>

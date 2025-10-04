@@ -1,20 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEntries } from "../../context/EntriesContext";
 
 export default function JournalScreen() {
   const [energy, setEnergy] = useState(3);
-  const [entries, setEntries] = useState<any[]>([]);
-
-  const saveEntries = async (newEntries: any[]) => {
-    try {
-      const jsonValue = JSON.stringify(newEntries);
-      await AsyncStorage.setItem("entries", jsonValue);
-    } catch (e) {
-      console.error("Erreur sauvegarde :", e);
-    }
-  };
+  const { entries, setEntries } = useEntries();
 
   const handleSave = () => {
     const newEntry = {
@@ -22,9 +13,7 @@ export default function JournalScreen() {
       date: new Date().toLocaleDateString(),
       value: energy,
     };
-    const newEntries = [...entries, newEntry];
-    setEntries(newEntries);
-    saveEntries(newEntries);
+    setEntries([...entries, newEntry]);
   };
 
   return (

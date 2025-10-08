@@ -10,14 +10,20 @@ type Entry = {
 type EntriesContextType = {
   entries: Entry[];
   setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+  addOrUpdateEntry: (value: number) => void; // 👈 nouvelle méthode
 };
 
 const EntriesContext = createContext<EntriesContextType>({
   entries: [],
-  setEntries: () => {},
+  setEntries: () => { },
+  addOrUpdateEntry: ()=>{},
 });
 
-export const EntriesProvider = ({ children }: { children: React.ReactNode }) => {
+export const EntriesProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [entries, setEntries] = useState<Entry[]>([]);
 
   useEffect(() => {
@@ -43,8 +49,22 @@ export const EntriesProvider = ({ children }: { children: React.ReactNode }) => 
     if (entries.length) saveEntries();
   }, [entries]);
 
+  const addOrUpdateEntry = (value: number) => {
+    const today = new Date().toISOString().split("T")[0];
+    setEntries((prev) => {
+      const existing = prev.find((e) => e.date === today);
+      if (existing) {
+        // mise à jour de la valeur du jour
+        return prev.map((e) => (e.date === today ? { ...e, value } : e));
+      } else {
+        // nouvelle entrée
+        return [...prev, { id: Math.random().toString(), date: today, value }];
+      }
+    });
+  };
+
   return (
-    <EntriesContext.Provider value={{ entries, setEntries }}>
+    <EntriesContext.Provider value={{ entries, setEntries,addOrUpdateEntry }}>
       {children}
     </EntriesContext.Provider>
   );

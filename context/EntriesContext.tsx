@@ -37,20 +37,8 @@ export const EntriesProvider = ({
     };
     loadEntries();
   }, []);
-
-  useEffect(() => {
-    const saveEntries = async () => {
-      try {
-        await AsyncStorage.setItem("entries", JSON.stringify(entries));
-      } catch (e) {
-        console.error("Erreur de sauvegarde :", e);
-      }
-    };
-    if (entries.length) saveEntries();
-  }, [entries]);
-
   const addOrUpdateEntry = (value: number) => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString();
     setEntries((prev) => {
       const existing = prev.find((e) => e.date === today);
       if (existing) {

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { useEntries } from "../../context/EntriesContext";
 import { formatDisplayDate } from "../../utils/dateUtils";
+import { theme } from "../../theme";
 
 export default function HistoryScreen() {
   const { entries } = useEntries();
@@ -12,15 +13,17 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>Historique :</Text>
+      <Text style={styles.title}>Historique</Text>
       <FlatList
         data={sortedEntries}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Text style={styles.item}>
-            {formatDisplayDate(item.date)} → {item.value}/5
-          </Text>
+          <View style={styles.card}>
+            <Text style={styles.date}>{formatDisplayDate(item.date)}</Text>
+            <Text style={styles.value}>{item.value}/5</Text>
+          </View>
         )}
+        contentContainerStyle={styles.listContent}
       />
     </View>
   );
@@ -29,17 +32,39 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    backgroundColor: theme.colors.background,
+    padding: theme.spacing.md,
   },
-  subtitle: {
-    fontSize: 18,
-    marginVertical: 10,
+  title: {
+    fontSize: 22,
     fontWeight: "600",
+    color: theme.colors.text,
+    marginBottom: theme.spacing.md,
+    textAlign: "center",
   },
-  item: {
-    fontSize: 16,
-    marginVertical: 4,
+  listContent: {
+    paddingBottom: theme.spacing.lg,
+    display: "flex",
+    alignItems :"center",
+  },
+  card: {
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.md,
+    padding: theme.spacing.md,
+    marginVertical: theme.spacing.sm,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: "row",
+  },
+  date: {
+    color: theme.colors.subtleText,
+        padding: theme.spacing.md,
+  },
+  value: {
+    fontWeight: "bold",
+    color: theme.colors.primary,
+        padding: theme.spacing.md,
   },
 });

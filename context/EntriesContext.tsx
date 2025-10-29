@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Entry = {
+  energyLevel: number;
   id: string;
   date: string;
   value: number;

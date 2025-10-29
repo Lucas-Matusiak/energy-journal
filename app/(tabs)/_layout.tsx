@@ -7,6 +7,7 @@ export default function TabLayout() {
   return (
     <EntriesProvider>
       <Tabs
+      
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarActiveTintColor: "#4CAF50",

@@ -11,7 +11,7 @@ type Entry = {
 type EntriesContextType = {
   entries: Entry[];
   setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
-  addOrUpdateEntry: (value: number) => void; // 👈 nouvelle méthode
+  addOrUpdateEntry: (value: number) => void;
 };
 
 const EntriesContext = createContext<EntriesContextType>({
@@ -26,28 +26,23 @@ export const EntriesProvider = ({
   children: React.ReactNode;
 }) => {
   const [entries, setEntries] = useState<Entry[]>([]);
-  // helper de normalisation
   const normalizeDateString = (dateStr: string) => {
     if (!dateStr) return dateStr;
 
-    // déjà ISO YYYY-MM-DD ?
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
 
-    // si format DD/MM/YYYY ou D/M/YYYY
     if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) {
       const [d, m, y] = dateStr.split("/");
       const dd = d.padStart(2, "0");
       const mm = m.padStart(2, "0");
-      return `${y}-${mm}-${dd}`; // YYYY-MM-DD
+      return `${y}-${mm}-${dd}`;
     }
 
-    // fallback : essayer de parser (peut échouer selon la plateforme)
     const parsed = new Date(dateStr);
     if (!isNaN(parsed.getTime())) {
       return parsed.toISOString().split("T")[0];
     }
 
-    // si on ne sait pas, renvoyer tel quel
     return dateStr;
   };
 
@@ -64,8 +59,6 @@ export const EntriesProvider = ({
         }));
 
         setEntries(normalized);
-
-        // réécrire si on a modifié le format (utile une seule fois pour migrer)
         if (JSON.stringify(normalized) !== jsonValue) {
           await AsyncStorage.setItem("entries", JSON.stringify(normalized));
         }
@@ -76,7 +69,7 @@ export const EntriesProvider = ({
     loadEntries();
   }, []);
   const addOrUpdateEntry = (value: number) => {
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+    const today = new Date().toISOString().split("T")[0];
     setEntries((prev) => {
       const existing = prev.find((e) => e.date === today);
       if (existing) {

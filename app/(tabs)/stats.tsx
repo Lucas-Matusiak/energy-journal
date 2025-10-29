@@ -13,7 +13,6 @@ export default function StatsScreen() {
       </View>
     );
   }
-  console.log(entries);
   const total = entries.length;
   const avg = entries.reduce((acc, e) => acc + (e.value || 0), 0) / total;
 
